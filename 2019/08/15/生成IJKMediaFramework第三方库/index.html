@@ -15,7 +15,7 @@
 <meta property="og:site_name">
 <meta property="og:description" content="一、下载ijkplayerhttps://github.com/Bilibili/ijkplayer 二、编译ijkplayer1、打开终端, cd 到jkplayer-master文件夹中, 也就是下载完解压后的文件夹。2、终端执行命令行./init-ios.sh, 这一步是去下载 FFMpeg 的, 时间稍微会久一点。3、在第2步中下载完成后, 终端执行cd ios, 也就是说进入到 ios目">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-15T12:37:40.064Z">
+<meta property="og:updated_time" content="2019-08-15T14:53:42.077Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="生成IJKMediaFramework第三方库">
 <meta name="twitter:description" content="一、下载ijkplayerhttps://github.com/Bilibili/ijkplayer 二、编译ijkplayer1、打开终端, cd 到jkplayer-master文件夹中, 也就是下载完解压后的文件夹。2、终端执行命令行./init-ios.sh, 这一步是去下载 FFMpeg 的, 时间稍微会久一点。3、在第2步中下载完成后, 终端执行cd ios, 也就是说进入到 ios目">
@@ -164,10 +164,39 @@
       
         <h3 id="一、下载ijkplayer"><a href="#一、下载ijkplayer" class="headerlink" title="一、下载ijkplayer"></a>一、下载ijkplayer</h3><p><a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="noopener">https://github.com/Bilibili/ijkplayer</a></p>
 <h3 id="二、编译ijkplayer"><a href="#二、编译ijkplayer" class="headerlink" title="二、编译ijkplayer"></a>二、编译ijkplayer</h3><p>1、打开终端, cd 到jkplayer-master文件夹中, 也就是下载完解压后的文件夹。<br>2、终端执行命令行./init-ios.sh, 这一步是去下载 FFMpeg 的, 时间稍微会久一点。<br>3、在第2步中下载完成后, 终端执行cd ios, 也就是说进入到 ios目录下。<br>4、进入 ios 文件夹后, 在终端依次执行./compile-ffmpeg.sh clean和./compile-ffmpeg.sh all命令, 编译 FFMpeg, 也就是README.md中这两步.编译时间也较久。</p>
-<h3 id="三、打包IJKMediaFramework-framework框架"><a href="#三、打包IJKMediaFramework-framework框架" class="headerlink" title="三、打包IJKMediaFramework.framework框架"></a>三、打包IJKMediaFramework.framework框架</h3><p>1、打开工程IJKMediaPlayer.xcodeproj。<br>2、工程打开后设置工程的 scheme。<br>3、设置好 scheme 后, 分别选择真机和模拟器进行编译, 编译完成后进入 Finder。<br>4、进入 Finder 后, 可以看到有真机和模拟器两个版本的编译结果。<br>5、合并真机和模拟器版本的 framework。<br>6、使用终端进行合并, 命令行具体格式为:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -create &quot;真机版本路径&quot; &quot;模拟器版本路径&quot; -output &quot;合并后的文件路径&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="三、打包IJKMediaFramework-framework框架"><a href="#三、打包IJKMediaFramework-framework框架" class="headerlink" title="三、打包IJKMediaFramework.framework框架"></a>三、打包IJKMediaFramework.framework框架</h3><p>1、打开工程IJKMediaPlayer.xcodeproj。<br>2、工程打开后设置工程的 scheme。<br>3、设置好 scheme 后, 分别选择真机和模拟器进行编译,<br>编译又分为http编译和https编译<br>http编译对应ffmpeg<br>https编译对应openssl</p>
+<p>编译openssl, 如果不需要https可以跳过这一步<br>./compile-openssl.sh all<br>编译ffmpeg<br>./compile-ffmpeg.sh all</p>
+<p>1) Cmd + b 直接运行，会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./libavutil/arm/asm.S:50:9: error: unknown directive</span><br><span class="line">        .arch armv7-a</span><br><span class="line">        ^</span><br><span class="line">make: *** [libavcodec/arm/aacpsdsp_neon.o] Error 1</span><br></pre></td></tr></table></figure>
 
-<p>7、用合并后的IJKMediaFramework把原来的IJKMediaFramework替换掉。<br>8、IJKMediaFramework.framework文件就是我们需要的框架了, 可以复制粘贴出来, 后期我们需要导入工程使用。</p>
+<p>最新的 Xcode 已经弱化了对 32 位的支持, 解决方法:<br>在 compile-ffmpeg.sh中删除 armv7, 修改如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FF_ALL_ARCHS_IOS8_SDK=&quot;arm64 i386 x86_64&quot;</span><br></pre></td></tr></table></figure>
+
+<p>再重新执行出现错误的命令: ./compile-ffmpeg.sh all</p>
+<p>2) Cmd + b 直接运行，会报错 avconfig.h 文件找不到，这时候去一下路径找到 avconfig.h 文件，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Desktop/ijkplayer-ios/ios/build/universal/include/libavutil</span><br></pre></td></tr></table></figure>
+
+<p>打开 avconfig.h ，注释掉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &quot;armv7/avconfig.h&quot;</span><br></pre></td></tr></table></figure>
+
+<p>3）Cmd + b 再运行，又报错 config.h 文件找不到，去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Desktop/ijkplayer-ios/ios/build/universal/include/libffmpeg</span><br></pre></td></tr></table></figure>
+
+<p>中打开 config.h , 同上注释掉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &quot;armv7/avconfig.h&quot;</span><br></pre></td></tr></table></figure>
+
+<p>4）Cmd + b 再运行，还报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">... ld: symbol(s) not found for architecture armv7,</span><br></pre></td></tr></table></figure>
+
+<p>也就是 armv7 不支持，去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TARGETS ——&gt; IJKMediaFrameworkWithSSL ——&gt; Build Settings ——&gt; Valid Architecutres</span><br></pre></td></tr></table></figure>
+
+<p>中，删掉其中的 armv7、armv7s</p>
+<p>编译完成后进入 Finder。<br>4、进入 Finder 后, 可以看到有真机和模拟器两个版本的编译结果。<br>5、合并真机和模拟器版本的 framework。<br>6、使用终端进行合并,打开终端, 先 cd到 Products目录下, 然后执行: lipo -create 真机framework路径 模拟器framework路径 -output 合并的文件路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -create Release-iphoneos/IJKMediaFramework.framework/IJKMediaFramework Release-iphonesimulator/IJKMediaFramework.framework/IJKMediaFramework -output IJKMediaFramework</span><br></pre></td></tr></table></figure>
+
+<p>合并完成可以看到这里生成了一个大概两倍大小的文件, 将生成的 IJKMediaFramework文件替换掉 真机framework中的 IJKMediaFramework文件，然后这个替换掉文件的 真机framework就是我们需要的 通用的framework了。</p>
+<p>7、IJKMediaFramework.framework文件就是我们需要的框架了, 可以复制粘贴出来, 后期我们需要导入工程使用。</p>
 <h3 id="四、iOS工程中集成IJKPlayer"><a href="#四、iOS工程中集成IJKPlayer" class="headerlink" title="四、iOS工程中集成IJKPlayer"></a>四、iOS工程中集成IJKPlayer</h3><p>新建工程, 导入合并后的IJKMediaFramework.framework</p>
 <p>导入的依赖库:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">AudioToolbox.framework</span><br><span class="line">AVFoundation.framework</span><br><span class="line">CoreGraphics.framework</span><br><span class="line">CoreMedia.framework</span><br><span class="line">CoreVideo.framework</span><br><span class="line">libbz2.tbd</span><br><span class="line">libz.tbd</span><br><span class="line">MediaPlayer.framework</span><br><span class="line">MobileCoreServices.framework</span><br><span class="line">OpenGLES.framework</span><br><span class="line">QuartzCore.framework</span><br><span class="line">UIKit.framework</span><br><span class="line">VideoToolbox.framework</span><br></pre></td></tr></table></figure>
@@ -175,7 +204,8 @@
 <h3 id="五、使用-IJKMediaFramework第三方库"><a href="#五、使用-IJKMediaFramework第三方库" class="headerlink" title="五、使用 IJKMediaFramework第三方库"></a>五、使用 IJKMediaFramework第三方库</h3><p>这里在ViewController.m文件中使用IJKMediaFramework框架进行测试使用</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;IJKMediaFramework/IJKMediaFramework.h&gt;</span><br><span class="line"></span><br><span class="line">// 直播视频</span><br><span class="line">self.url = [NSURL URLWithString:@&quot;http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8&quot;];</span><br><span class="line">// self.url = [NSURL URLWithString:@&quot;https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4&quot;];</span><br><span class="line"></span><br><span class="line">_player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.url withOptions:nil];</span><br><span class="line">UIView *playerView = [self.player view];</span><br><span class="line">UIView *displayView = [[UIView alloc] initWithFrame:self.view.bounds];</span><br><span class="line">self.playerView = displayView;</span><br><span class="line">self.playerView.backgroundColor = [UIColor blackColor];</span><br><span class="line">[self.view addSubview:self.playerView];</span><br><span class="line"></span><br><span class="line">playerView.frame = self.playerView.bounds;</span><br><span class="line">playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;</span><br><span class="line">[self.playerView insertSubview:playerView atIndex:1];</span><br><span class="line">[_player setScalingMode:IJKMPMovieScalingModeAspectFill];</span><br><span class="line">[self installMovieNotificationObservers];</span><br></pre></td></tr></table></figure>
 
-<p>转载自链接：<a href="https://www.jianshu.com/p/59aff611dacd" target="_blank" rel="noopener">https://www.jianshu.com/p/59aff611dacd</a></p>
+<br>
+转载自链接：https://www.jianshu.com/p/59aff611dacd
 
       
 
@@ -273,6 +303,16 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2019/08/15/可用RTMP直播源/" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          可用RTMP直播源
+        
+      </div>
+    </a>
   
   
     <a href="/2019/08/12/iOS 开发中的 Bitcode/" id="article-nav-older" class="article-nav-link-wrap">
