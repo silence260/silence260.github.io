@@ -15,7 +15,7 @@
 <meta property="og:site_name">
 <meta property="og:description" content="本文主要使用的三个技术：推流：LFLiveKit播放：ijkplayer服务器:nginx+rtmp+ffmpeg 一、推流LFLiveKit：框架支持RTMP，由Adobe公司开发。github地址https://github.com/LaiFengiOS/LFLiveKitLFLiveKit库里已经集成GPUImage框架用于美颜功能，GPUImage基于OpenGl开发，纯OC语言框架，封装">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-14T14:46:06.945Z">
+<meta property="og:updated_time" content="2019-09-19T13:18:46.936Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建iOS端视频直播系统">
 <meta name="twitter:description" content="本文主要使用的三个技术：推流：LFLiveKit播放：ijkplayer服务器:nginx+rtmp+ffmpeg 一、推流LFLiveKit：框架支持RTMP，由Adobe公司开发。github地址https://github.com/LaiFengiOS/LFLiveKitLFLiveKit库里已经集成GPUImage框架用于美颜功能，GPUImage基于OpenGl开发，纯OC语言框架，封装">
@@ -164,6 +164,7 @@
       
         <p>本文主要使用的三个技术：<br>推流：LFLiveKit<br>播放：ijkplayer<br>服务器:nginx+rtmp+ffmpeg</p>
 <h3 id="一、推流"><a href="#一、推流" class="headerlink" title="一、推流"></a>一、推流</h3><p>LFLiveKit：框架支持RTMP，由Adobe公司开发。github地址<a href="https://github.com/LaiFengiOS/LFLiveKit" target="_blank" rel="noopener">https://github.com/LaiFengiOS/LFLiveKit</a><br>LFLiveKit库里已经集成GPUImage框架用于美颜功能，GPUImage基于OpenGl开发，纯OC语言框架，封装好了各种滤镜同时也可以编写自定义的滤镜，其本身内置了多达125种常见的滤镜效果。</p>
+<a id="more"></a>
 <h3 id="二、播放"><a href="#二、播放" class="headerlink" title="二、播放"></a>二、播放</h3><p>ijkplayer：是基于FFmpeg的跨平台播放器框架，由B站开发。目前已被多个主流直播App集成使用。github地址：<a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="noopener">https://github.com/Bilibili/ijkplayer</a></p>
 <h3 id="三、服务器搭建"><a href="#三、服务器搭建" class="headerlink" title="三、服务器搭建"></a>三、服务器搭建</h3><p>nginx+rtmp+ffmpeg：在本地搭建服务器，免去开通第三方直播的流量费用。<br>现在我们的项目中集成了推流的所用的LFLiveKit，播放所需的ijkplayer，便可用手机做推流直播，模拟器做拉流播放。</p>
 <h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>一个完整的直播系统需要涉及到的技术主要包括以下方面：<br>1.采集、2.滤镜处理、3.编码、4.推流、5.CDN分发、6.拉流、7.解码、8.播放、9.聊天互动。<br>其中1～4由LFLiveKit完成（2由GPUImage完成），5就是搭建的本地服务器，6～8由ijkplayer完成。</p>
