@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>iOS性能调优 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染">
+  <meta name="description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS性能调优">
 <meta property="og:url" content="http://yoursite.com/2019/09/19/iOS性能调优/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染">
+<meta property="og:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-19T13:19:25.638Z">
+<meta property="og:updated_time" content="2019-09-19T13:24:21.489Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS性能调优">
-<meta name="twitter:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染">
+<meta name="twitter:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，">
   
     <link rel="alternative" href="/atom.xml" title type="application/atom+xml">
   
@@ -158,13 +158,41 @@
   	<time datetime="2019-09-19T00:16:13.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
 </a>
         
+
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+<!-- 目录内容 -->
+
+<!-- 目录内容结束 -->
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="一、CPU和GPU"><a href="#一、CPU和GPU" class="headerlink" title="一、CPU和GPU"></a>一、CPU和GPU</h3><p>CPU-中央处理器<br>对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。<br>GPU-图像处理器<br>纹理的渲染</p>
-<a id="more"></a>
-<p>在iOS中是双缓冲机制，有前帧缓存、后帧缓存<br>即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，GPU会等待显示器的VSync信号发出后，前帧缓存和后帧缓存会瞬间切换，后帧缓存会变成新的前帧缓存，同时旧的前帧缓存会变成新的后帧缓存。</p>
+        <h3 id="一、CPU和GPU"><a href="#一、CPU和GPU" class="headerlink" title="一、CPU和GPU"></a>一、CPU和GPU</h3><p>CPU-中央处理器<br>对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。<br>GPU-图像处理器<br>纹理的渲染<br>在iOS中是双缓冲机制，有前帧缓存、后帧缓存<br>即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，GPU会等待显示器的VSync信号发出后，前帧缓存和后帧缓存会瞬间切换，后帧缓存会变成新的前帧缓存，同时旧的前帧缓存会变成新的后帧缓存。</p>
 <h3 id="二、卡顿产生的原因"><a href="#二、卡顿产生的原因" class="headerlink" title="二、卡顿产生的原因"></a>二、卡顿产生的原因</h3><p>在Sync信号到来后，系统图形服务会通过CADisplayLink等机制通知App，App主线程开始在CPU中计算显示内容，比如视图的创建，布局计算，图片解码，文本绘制等。随后CPU会将计算好的内容提交到GPU去，由GPU进行交换，合成，渲染。随后GPU会把渲染结果提交到帧缓冲区，等待下一次VSync信号（垂直同步信号）到来时显示到屏幕上。由于垂直同步机制，如果在一个VSync时间内，CPU或者GPU没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示，而这时显示屏因为没有新的刷新，会保留之前的内容不变。这就造成了卡顿。<br>按照60FPS的刷帧率，每隔16ms就会有一次VSync信号。</p>
 <h3 id="三、卡顿优化-CPU"><a href="#三、卡顿优化-CPU" class="headerlink" title="三、卡顿优化-CPU"></a>三、卡顿优化-CPU</h3><p>尽量用轻量级的对象，比如用不到事件处理的地方，可以考虑使用CALayer取代UIView<br>不要频繁地调用UIView的相关属性，比如frame、bounds、transform等属性，尽量减少不必要的修改<br>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性<br>Autolayout会比直接设置frame消耗更多的CPU资源<br>图片的size最好刚好跟UIImageView的size保持一致<br>控制一下线程的最大并发数量<br>尽量把耗时的操作放到子线程</p>
 <h3 id="四、卡顿优化-GPU"><a href="#四、卡顿优化-GPU" class="headerlink" title="四、卡顿优化-GPU"></a>四、卡顿优化-GPU</h3><p>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示<br>尽量减少视图数量和层次<br>减少透明的视图（alpha&lt;1），不透明的就设置opaque为YES<br>尽量避免出现离屏渲染</p>
