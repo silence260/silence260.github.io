@@ -8,17 +8,17 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>iOS 开发中的 Bitcode | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。  Apple 目前采用的编译器工具链是 LLVM，我们在编辑器中通过 C/C++/Objective-c/Swift 等语言编写的程序，通过 LLVM 编">
+  <meta name="description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="iOS 开发中的 Bitcode">
 <meta property="og:url" content="http://yoursite.com/2019/08/12/iOS 开发中的 Bitcode/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。  Apple 目前采用的编译器工具链是 LLVM，我们在编辑器中通过 C/C++/Objective-c/Swift 等语言编写的程序，通过 LLVM 编">
+<meta property="og:description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-19T13:30:23.500Z">
+<meta property="og:updated_time" content="2019-09-19T13:39:28.638Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="iOS 开发中的 Bitcode">
-<meta name="twitter:description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。  Apple 目前采用的编译器工具链是 LLVM，我们在编辑器中通过 C/C++/Objective-c/Swift 等语言编写的程序，通过 LLVM 编">
+<meta name="twitter:description" content="Bitcode 是什么，有什么作用Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&amp;gt; ”Enable Bitcode” 中看到这个设置项。">
   
     <link rel="alternative" href="/atom.xml" title type="application/atom+xml">
   
@@ -163,6 +163,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h3 id="Bitcode-是什么，有什么作用"><a href="#Bitcode-是什么，有什么作用" class="headerlink" title="Bitcode 是什么，有什么作用"></a>Bitcode 是什么，有什么作用</h3><p>Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&gt; ”Enable Bitcode” 中看到这个设置项。 </p>
+<a id="more"></a>
 <p>Apple 目前采用的编译器工具链是 LLVM，我们在编辑器中通过 C/C++/Objective-c/Swift 等语言编写的程序，通过 LLVM 编译器编译为各个芯片平台上的汇编指令，或可执行机器指令数据。而 Bitcode 则是位于编译前后之间的一种中间码。 </p>
 <p>LLVM 的编译工作原理是先把项目程序源代码翻译为 Bitcode 中间码；再根据不同目标机器芯片平台，转换为相应的汇编指令及机器码。这样的设计就让 LLVM 成为了一个编译器架构，可以轻而易举的在 LLVM 架构之上发明新的语言，以及在 LLVM 架构下支持新的 CPU 指令输出。虽然 Bitcode 仅仅只是一个中间码，不能在任何平台上运行，但它可以转化为任何被支持的 CPU 指令，包括还没被发明的 CPU。 </p>
 <p>也就是说现在打开 Bitcode 功能，提交一个 App 到 App Store。如果后面 Apple 推出了一款 CPU 全新设计的手机，在苹果后台服务器一样可以通过这个 App 的 Bitcode 编译转化为适用于新 CPU 的可执行程序，以供新手机用户下载运行这个 App。 </p>
