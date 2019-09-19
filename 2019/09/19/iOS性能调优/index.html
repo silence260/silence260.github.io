@@ -6,19 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hello World | </title>
+  <title>iOS性能调优 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+  <meta name="description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染 在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2019/08/12/hello-world copy/index.html">
+<meta property="og:title" content="iOS性能调优">
+<meta property="og:url" content="http://yoursite.com/2019/09/19/iOS性能调优/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta property="og:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染 在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-12T12:53:40.000Z">
+<meta property="og:updated_time" content="2019-09-19T00:18:15.632Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="iOS性能调优">
+<meta name="twitter:description" content="一、CPU和GPUCPU-中央处理器对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。GPU-图像处理器纹理的渲染 在iOS中是双缓冲机制，有前帧缓存、后帧缓存即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候">
   
     <link rel="alternative" href="/atom.xml" title type="application/atom+xml">
   
@@ -59,8 +59,6 @@
 			
 				<li><a href="/">主页</a></li>
 	        
-				<li><a href="/tags/随笔/">随笔</a></li>
-	        
 			</ul>
 		</nav>
 		<nav class="header-smart-menu">
@@ -81,11 +79,11 @@
 				
 					<a class="github" target="_blank" href="https://github.com/silence260?tab=repositories" title="github"><i class="icon-github"></i></a>
 		        
-					<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+					<a class="google" target="_blank" href="/www.baidu.com" title="google"><i class="icon-google"></i></a>
 		        
 			</div>
 			<div>
-					<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=260 height=86 src="//music.163.com/outchain/player?type=2&id=33035954&auto=1&height=66"></iframe>
+				<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=240 height=86 src="//music.163.com/outchain/player?type=2&id=33035954&auto=1&height=66"></iframe>
 			</div>
 		</nav>
 	</header>		
@@ -113,8 +111,6 @@
 			
 				
 			
-				
-			
 			
 			
 			<nav class="header-nav">
@@ -122,7 +118,7 @@
 					
 						<a class="github" target="_blank" href="https://github.com/silence260?tab=repositories" title="github"><i class="icon-github"></i></a>
 			        
-						<a class="zhihu" target="_blank" href="#" title="zhihu"><i class="icon-zhihu"></i></a>
+						<a class="google" target="_blank" href="/www.baidu.com" title="google"><i class="icon-google"></i></a>
 			        
 				</div>
 			</nav>
@@ -131,9 +127,7 @@
 				<ul style="width: 50%">
 				
 				
-					<li style="width: 50%"><a href="/">主页</a></li>
-		        
-					<li style="width: 50%"><a href="/tags/随笔/">随笔</a></li>
+					<li style="width: 100%"><a href="/">主页</a></li>
 		        
 				</ul>
 			</nav>
@@ -148,39 +142,47 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hello-world copy" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-iOS性能调优" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      iOS性能调优
     </h1>
   
 
         
-        <a href="/2019/08/12/hello-world copy/" class="archive-article-date">
-  	<time datetime="2019-08-12T12:53:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-08-12</time>
+        <a href="/2019/09/19/iOS性能调优/" class="archive-article-date">
+  	<time datetime="2019-09-19T00:16:13.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-09-19</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <h3 id="一、CPU和GPU"><a href="#一、CPU和GPU" class="headerlink" title="一、CPU和GPU"></a>一、CPU和GPU</h3><p>CPU-中央处理器<br>对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。<br>GPU-图像处理器<br>纹理的渲染</p>
+<p>在iOS中是双缓冲机制，有前帧缓存、后帧缓存<br>即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，GPU会等待显示器的VSync信号发出后，前帧缓存和后帧缓存会瞬间切换，后帧缓存会变成新的前帧缓存，同时旧的前帧缓存会变成新的后帧缓存。</p>
+<h3 id="二、卡顿产生的原因"><a href="#二、卡顿产生的原因" class="headerlink" title="二、卡顿产生的原因"></a>二、卡顿产生的原因</h3><p>在Sync信号到来后，系统图形服务会通过CADisplayLink等机制通知App，App主线程开始在CPU中计算显示内容，比如视图的创建，布局计算，图片解码，文本绘制等。随后CPU会将计算好的内容提交到GPU去，由GPU进行交换，合成，渲染。随后GPU会把渲染结果提交到帧缓冲区，等待下一次VSync信号（垂直同步信号）到来时显示到屏幕上。由于垂直同步机制，如果在一个VSync时间内，CPU或者GPU没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示，而这时显示屏因为没有新的刷新，会保留之前的内容不变。这就造成了卡顿。<br>按照60FPS的刷帧率，每隔16ms就会有一次VSync信号。</p>
+<h3 id="三、卡顿优化-CPU"><a href="#三、卡顿优化-CPU" class="headerlink" title="三、卡顿优化-CPU"></a>三、卡顿优化-CPU</h3><p>尽量用轻量级的对象，比如用不到事件处理的地方，可以考虑使用CALayer取代UIView<br>不要频繁地调用UIView的相关属性，比如frame、bounds、transform等属性，尽量减少不必要的修改<br>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性<br>Autolayout会比直接设置frame消耗更多的CPU资源<br>图片的size最好刚好跟UIImageView的size保持一致<br>控制一下线程的最大并发数量<br>尽量把耗时的操作放到子线程</p>
+<h3 id="四、卡顿优化-GPU"><a href="#四、卡顿优化-GPU" class="headerlink" title="四、卡顿优化-GPU"></a>四、卡顿优化-GPU</h3><p>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示<br>尽量减少视图数量和层次<br>减少透明的视图（alpha&lt;1），不透明的就设置opaque为YES<br>尽量避免出现离屏渲染</p>
+<h3 id="五、离屏渲染"><a href="#五、离屏渲染" class="headerlink" title="五、离屏渲染"></a>五、离屏渲染</h3><p>在OpenGL中，GPU有2种渲染方式<br>1.On-Screen Rendering：当前屏幕渲染，在当前用于显示的屏幕缓冲区进行渲染操作<br>2.Off-Screen Rendering：离屏渲染，在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作</p>
+<p>离屏渲染消耗性能的原因<br>1.需要创建新的缓冲区<br>2.离屏渲染的整个过程，需要多次切换上下文环境，先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上，又需要将上下文环境从离屏切换到当前屏幕</p>
+<p>哪些操作会触发离屏渲染？<br>1.光栅化，layer.shouldRasterize = YES<br>2.遮罩，layer.mask<br>3.圆角，同时设置layer.masksToBounds = YES、layer.cornerRadius大于0。考虑通过CoreGraphics绘制裁剪圆角，或者叫美工提供圆角图片<br>4.阴影，layer.shadowXXX。如果设置了layer.shadowPath就不会产生离屏渲染</p>
+<h3 id="六、耗电优化"><a href="#六、耗电优化" class="headerlink" title="六、耗电优化"></a>六、耗电优化</h3><p>耗电来源：CPU、GPU处理、网络、定位、硬件检测</p>
+<p>CPU、GPU处理<br>尽可能降低CPU、GPU功耗<br>少用定时器<br>优化I/O操作<br>尽量不要频繁写入小数据，最好批量一次性写入<br>读写大量重要数据时，考虑用dispatch_io，其提供了基于GCD的异步操作文件I/O的API。用dispatch_io系统会优化磁盘访问<br>数据量比较大的，建议使用数据库（比如SQLite、CoreData）。</p>
+<p>网络<br>减少、压缩网络数据<br>如果多次请求的结果是相同的，尽量使用缓存<br>使用断点续传，否则网络不稳定时可能多次传输相同的内容<br>网络不可用时，不要尝试执行网络请求，让用户可以取消长时间运行或者速度很慢的网络操作，<br>设置合适的超时时间批量传输，比如，下载视频流时，不要传输很小的数据包，直接下载整个文件或者一大块一大块地下载。<br>如果下载广告，一次性多下载一些，然后再慢慢展示。如果下载电子邮件，一次下载多封，不要一封一封地下载。</p>
+<p>定位<br>如果只是需要快速确定用户位置，最好用CLLocationManager的requestLocation方法。定位完成后，会自动让定位硬件断电<br>如果不是导航应用，尽量不要实时更新位置，定位完毕就关掉定位服务<br>尽量降低定位精度，比如尽量不要使用精度最高的kCLLocationAccuracyBest<br>需要后台定位时，尽量设置pausesLocationUpdatesAutomatically为YES，如果用户不太可能移动的时候系统会自动暂停位置更新<br>尽量不要使用startMonitoringSignificantLocationChanges，优先考虑startMonitoringForRegion。</p>
+<p>硬件检测<br>用户移动、摇晃、倾斜设备时，会产生动作(motion)事件，这些事件由加速度计、陀螺仪、磁力计等硬件检测。在不需要检测的场合，应该及时关闭这些硬件。</p>
+<h3 id="七、APP的启动优化"><a href="#七、APP的启动优化" class="headerlink" title="七、APP的启动优化"></a>七、APP的启动优化</h3><p>启动分2种：冷启动和热启动<br>冷启动：从零开始启动APP（主要针对冷启动进行优化）<br>热启动：APP已经在内存中，在后台存活着，再次点击图标启动APP</p>
+<p>打印APP的冷启动时间：<br>通过添加环境变量（Edit scheme -&gt; Run -&gt; Arguments）<br>1）DYLD_PRINT_STATISTICS设置为1<br>2）如果需要更详细的信息，那就将DYLD_PRINT_STATISTICS_DETAILS设置为1</p>
+<p>Mach-O文件：<br>Mach-O文件格式是 OS X 与 iOS 系统上的可执行文件格式，像编译过程产生的.O文件，程序的可执行文件，动态库等都是Mach-O文件。<br>组成部分：<br>1）Header：保存了一些基本信息，包括了该文件运行的平台、文件类型、LoadCommands的个数等等。<br>2）LoadCommands：可以理解为加载命令，在加载Mach-O文件时会使用这里的数据来确定内存的分布以及相关的加载命令。比如我们的main函数的加载地址，程序所需的dyld的文件路径，以及相关依赖库的文件路径。<br>3）Data： 这里包含了具体的代码、数据等等。</p>
+<p>APP的冷启动过程：<br>系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径，然后加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接，最后调用每个依赖库的初始化方法，在这一步，runtime被初始化。当所有依赖库的初始化后，轮到最后一位(程序可执行文件)进行初始化，在这时runtime会对项目中所有类进行类结构初始化，然后调用所有的load方法。最后dyld返回main函数地址，main函数被调用，我们便来到了熟悉的程序入口。</p>
+<p>APP的冷启动主要分下面三大阶段: </p>
+<p>1、dyld加载依赖库<br>dyld，Apple的动态链接器，可以用来装载Mach-O文件（可执行文件、动态库等，dyld所做的事情有：<br>1）装载APP的可执行文件，同时会递归加载所有依赖的动态库<br>2）当dyld把可执行文件、动态库都装载完毕后，会通知Runtime进行下一步的处理<br>优化操作：<br>减少动态库、合并一些动态库（定期清理不必要的动态库）<br>减少Objc类、分类的数量、减少Selector数量（定期清理不必要的类、分类）<br>减少C++虚函数数量<br>Swift尽量使用struct</p>
+<p>2、runtime初始化<br>1）启动APP时，runtime所做的事情有<br>2）调用map_images进行可执行文件内容的解析和处理<br>3）在load_images中调用call_load_methods，调用所有Class和Category的+load方法<br>4）进行各种objc结构的初始化（注册Objc类 、初始化类对象等等）<br>5）调用C++静态初始化器和attribute((constructor))修饰的函数<br>6）到此为止，可执行文件和动态库中所有的符号(Class，Protocol，Selector，IMP，…)都已经按格式成功加载到内存中，被runtime 所管理<br>7）所有初始化工作结束后，dyld就会调用main函数<br>优化操作：<br>用+initialize方法和dispatch_once取代所有的<strong>attribute</strong>((constructor))、C++静态构造器、ObjC的+load</p>
+<p>3、main函数<br>调用AppDelegate的application:didFinishLaunchingWithOptions:方法<br>优化操作：<br>在不影响用户体验的前提下，尽可能将一些操作延迟，不要全部都放在finishLaunching方法中，按需加载</p>
 
       
 
@@ -265,7 +267,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/08/12/hello-world copy/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/09/19/iOS性能调优/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -279,19 +281,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/08/12/hello-world copy 2/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          Hello World
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/08/11/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">Hello World
+    <a href="/2019/09/19/iOS零碎知识点/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">iOS零碎知识点
       </div>
       <i class="icon-circle-right"></i>
     </a>
@@ -401,44 +393,12 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
   <div class="tools-wrap">
     
     	<section class="tools-section tools-section-all" q-show="innerArchive">
-        <div class="search-wrap">
-          <input class="search-ipt" q-model="search" type="text" placeholder="find something…">
-          <i class="icon-search icon" q-show="search|isEmptyStr"></i>
-          <i class="icon-close icon" q-show="search|isNotEmptyStr" q-on="click:clearChose(e)"></i>
-        </div>
-        <div class="widget tagcloud search-tag">
-          <p class="search-tag-wording">tag:</p>
-          <label class="search-switch">
-            <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
-          </label>
-          <ul class="article-tag-list" q-show="showTags">
-            
-            <div class="clearfix"></div>
-          </ul>
-        </div>
         <ul class="search-ul">
           <p q-show="jsonFail" style="padding: 20px; font-size: 12px;">
-            缺失模块。<br/>1、请确保node版本大于6.2<br/>2、在博客根目录（注意不是yilia根目录）执行以下命令：<br/> npm i hexo-generator-json-content --save<br/><br/>
-            3、在根目录_config.yml里添加配置：
-<pre style="font-size: 12px;" q-show="jsonFail">
-  jsonContent:
-    meta: false
-    pages: false
-    posts:
-      title: true
-      date: true
-      path: true
-      text: false
-      raw: false
-      content: false
-      slug: false
-      updated: false
-      comments: false
-      link: false
-      permalink: false
-      excerpt: false
-      categories: false
-      tags: true
+            
+<pre style="font-size: 14px;" q-show="jsonFail">
+    iOS 开发中的 Bitcode <br/>
+    搭建iOS端视频直播系统
 </pre>
           </p>
           <li class="search-li" q-repeat="items" q-show="isShow">
@@ -461,7 +421,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
     
     	<section class="tools-section tools-section-me" q-show="aboutme">
   	  	
-  	  		<div class="aboutme-wrap" id="js-aboutme">很惭愧&lt;br&gt;&lt;br&gt;只做了一点微小的工作&lt;br&gt;谢谢大家</div>
+  	  		<div class="aboutme-wrap" id="js-aboutme">前端：iOS、Android&lt;br&gt;&lt;br&gt;后端：java、node.js&lt;br&gt;&lt;br&gt;深度学习：Tensorflow&lt;br&gt;&lt;br&gt;&lt;br&gt;qq：2646923172</div>
   	  	
     	</section>
     
