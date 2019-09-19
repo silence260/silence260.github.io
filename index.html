@@ -160,8 +160,28 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="一、CPU和GPU"><a href="#一、CPU和GPU" class="headerlink" title="一、CPU和GPU"></a>一、CPU和GPU</h3><p>CPU-中央处理器<br>对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。<br>GPU-图像处理器</p>
-        
+        <a id="more"></a>
+<h3 id="一、CPU和GPU"><a href="#一、CPU和GPU" class="headerlink" title="一、CPU和GPU"></a>一、CPU和GPU</h3><p>CPU-中央处理器<br>对象的创建和销毁、对象属性的调整、布局计算、文本计算和排版、图片的格式转换和解码、图像的绘制。<br>GPU-图像处理器<br>纹理的渲染<br>在iOS中是双缓冲机制，有前帧缓存、后帧缓存<br>即GPU会预先渲染好一帧放入一个缓冲区内（前帧缓存），让视频控制器读取，当下一帧渲染好后，GPU会直接把视频控制器的指针指向第二个缓冲器（后帧缓存）。当你视频控制器已经读完一帧，准备读下一帧的时候，GPU会等待显示器的VSync信号发出后，前帧缓存和后帧缓存会瞬间切换，后帧缓存会变成新的前帧缓存，同时旧的前帧缓存会变成新的后帧缓存。</p>
+<h3 id="二、卡顿产生的原因"><a href="#二、卡顿产生的原因" class="headerlink" title="二、卡顿产生的原因"></a>二、卡顿产生的原因</h3><p>在Sync信号到来后，系统图形服务会通过CADisplayLink等机制通知App，App主线程开始在CPU中计算显示内容，比如视图的创建，布局计算，图片解码，文本绘制等。随后CPU会将计算好的内容提交到GPU去，由GPU进行交换，合成，渲染。随后GPU会把渲染结果提交到帧缓冲区，等待下一次VSync信号（垂直同步信号）到来时显示到屏幕上。由于垂直同步机制，如果在一个VSync时间内，CPU或者GPU没有完成内容提交，则那一帧就会被丢弃，等待下一次机会再显示，而这时显示屏因为没有新的刷新，会保留之前的内容不变。这就造成了卡顿。<br>按照60FPS的刷帧率，每隔16ms就会有一次VSync信号。</p>
+<h3 id="三、卡顿优化-CPU"><a href="#三、卡顿优化-CPU" class="headerlink" title="三、卡顿优化-CPU"></a>三、卡顿优化-CPU</h3><p>尽量用轻量级的对象，比如用不到事件处理的地方，可以考虑使用CALayer取代UIView<br>不要频繁地调用UIView的相关属性，比如frame、bounds、transform等属性，尽量减少不必要的修改<br>尽量提前计算好布局，在有需要时一次性调整对应的属性，不要多次修改属性<br>Autolayout会比直接设置frame消耗更多的CPU资源<br>图片的size最好刚好跟UIImageView的size保持一致<br>控制一下线程的最大并发数量<br>尽量把耗时的操作放到子线程</p>
+<h3 id="四、卡顿优化-GPU"><a href="#四、卡顿优化-GPU" class="headerlink" title="四、卡顿优化-GPU"></a>四、卡顿优化-GPU</h3><p>尽量避免短时间内大量图片的显示，尽可能将多张图片合成一张进行显示<br>尽量减少视图数量和层次<br>减少透明的视图（alpha&lt;1），不透明的就设置opaque为YES<br>尽量避免出现离屏渲染</p>
+<h3 id="五、离屏渲染"><a href="#五、离屏渲染" class="headerlink" title="五、离屏渲染"></a>五、离屏渲染</h3><p>在OpenGL中，GPU有2种渲染方式<br>1.On-Screen Rendering：当前屏幕渲染，在当前用于显示的屏幕缓冲区进行渲染操作<br>2.Off-Screen Rendering：离屏渲染，在当前屏幕缓冲区以外新开辟一个缓冲区进行渲染操作</p>
+<p>离屏渲染消耗性能的原因<br>1.需要创建新的缓冲区<br>2.离屏渲染的整个过程，需要多次切换上下文环境，先是从当前屏幕（On-Screen）切换到离屏（Off-Screen）；等到离屏渲染结束以后，将离屏缓冲区的渲染结果显示到屏幕上，又需要将上下文环境从离屏切换到当前屏幕</p>
+<p>哪些操作会触发离屏渲染？<br>1.光栅化，layer.shouldRasterize = YES<br>2.遮罩，layer.mask<br>3.圆角，同时设置layer.masksToBounds = YES、layer.cornerRadius大于0。考虑通过CoreGraphics绘制裁剪圆角，或者叫美工提供圆角图片<br>4.阴影，layer.shadowXXX。如果设置了layer.shadowPath就不会产生离屏渲染</p>
+<h3 id="六、耗电优化"><a href="#六、耗电优化" class="headerlink" title="六、耗电优化"></a>六、耗电优化</h3><p>耗电来源：CPU、GPU处理、网络、定位、硬件检测</p>
+<p>CPU、GPU处理<br>尽可能降低CPU、GPU功耗<br>少用定时器<br>优化I/O操作<br>尽量不要频繁写入小数据，最好批量一次性写入<br>读写大量重要数据时，考虑用dispatch_io，其提供了基于GCD的异步操作文件I/O的API。用dispatch_io系统会优化磁盘访问<br>数据量比较大的，建议使用数据库（比如SQLite、CoreData）。</p>
+<p>网络<br>减少、压缩网络数据<br>如果多次请求的结果是相同的，尽量使用缓存<br>使用断点续传，否则网络不稳定时可能多次传输相同的内容<br>网络不可用时，不要尝试执行网络请求，让用户可以取消长时间运行或者速度很慢的网络操作，<br>设置合适的超时时间批量传输，比如，下载视频流时，不要传输很小的数据包，直接下载整个文件或者一大块一大块地下载。<br>如果下载广告，一次性多下载一些，然后再慢慢展示。如果下载电子邮件，一次下载多封，不要一封一封地下载。</p>
+<p>定位<br>如果只是需要快速确定用户位置，最好用CLLocationManager的requestLocation方法。定位完成后，会自动让定位硬件断电<br>如果不是导航应用，尽量不要实时更新位置，定位完毕就关掉定位服务<br>尽量降低定位精度，比如尽量不要使用精度最高的kCLLocationAccuracyBest<br>需要后台定位时，尽量设置pausesLocationUpdatesAutomatically为YES，如果用户不太可能移动的时候系统会自动暂停位置更新<br>尽量不要使用startMonitoringSignificantLocationChanges，优先考虑startMonitoringForRegion。</p>
+<p>硬件检测<br>用户移动、摇晃、倾斜设备时，会产生动作(motion)事件，这些事件由加速度计、陀螺仪、磁力计等硬件检测。在不需要检测的场合，应该及时关闭这些硬件。</p>
+<h3 id="七、APP的启动优化"><a href="#七、APP的启动优化" class="headerlink" title="七、APP的启动优化"></a>七、APP的启动优化</h3><p>启动分2种：冷启动和热启动<br>冷启动：从零开始启动APP（主要针对冷启动进行优化）<br>热启动：APP已经在内存中，在后台存活着，再次点击图标启动APP</p>
+<p>打印APP的冷启动时间：<br>通过添加环境变量（Edit scheme -&gt; Run -&gt; Arguments）<br>1）DYLD_PRINT_STATISTICS设置为1<br>2）如果需要更详细的信息，那就将DYLD_PRINT_STATISTICS_DETAILS设置为1</p>
+<p>Mach-O文件：<br>Mach-O文件格式是 OS X 与 iOS 系统上的可执行文件格式，像编译过程产生的.O文件，程序的可执行文件，动态库等都是Mach-O文件。<br>组成部分：<br>1）Header：保存了一些基本信息，包括了该文件运行的平台、文件类型、LoadCommands的个数等等。<br>2）LoadCommands：可以理解为加载命令，在加载Mach-O文件时会使用这里的数据来确定内存的分布以及相关的加载命令。比如我们的main函数的加载地址，程序所需的dyld的文件路径，以及相关依赖库的文件路径。<br>3）Data： 这里包含了具体的代码、数据等等。</p>
+<p>APP的冷启动过程：<br>系统先读取App的可执行文件（Mach-O文件），从里面获得dyld的路径，然后加载dyld，dyld去初始化运行环境，开启缓存策略，加载程序相关依赖库(其中也包含我们的可执行文件)，并对这些库进行链接，最后调用每个依赖库的初始化方法，在这一步，runtime被初始化。当所有依赖库的初始化后，轮到最后一位(程序可执行文件)进行初始化，在这时runtime会对项目中所有类进行类结构初始化，然后调用所有的load方法。最后dyld返回main函数地址，main函数被调用，我们便来到了熟悉的程序入口。</p>
+<p>APP的冷启动主要分下面三大阶段: </p>
+<p>1、dyld加载依赖库<br>dyld，Apple的动态链接器，可以用来装载Mach-O文件（可执行文件、动态库等，dyld所做的事情有：<br>1）装载APP的可执行文件，同时会递归加载所有依赖的动态库<br>2）当dyld把可执行文件、动态库都装载完毕后，会通知Runtime进行下一步的处理<br>优化操作：<br>减少动态库、合并一些动态库（定期清理不必要的动态库）<br>减少Objc类、分类的数量、减少Selector数量（定期清理不必要的类、分类）<br>减少C++虚函数数量<br>Swift尽量使用struct</p>
+<p>2、runtime初始化<br>1）启动APP时，runtime所做的事情有<br>2）调用map_images进行可执行文件内容的解析和处理<br>3）在load_images中调用call_load_methods，调用所有Class和Category的+load方法<br>4）进行各种objc结构的初始化（注册Objc类 、初始化类对象等等）<br>5）调用C++静态初始化器和attribute((constructor))修饰的函数<br>6）到此为止，可执行文件和动态库中所有的符号(Class，Protocol，Selector，IMP，…)都已经按格式成功加载到内存中，被runtime 所管理<br>7）所有初始化工作结束后，dyld就会调用main函数<br>优化操作：<br>用+initialize方法和dispatch_once取代所有的<strong>attribute</strong>((constructor))、C++静态构造器、ObjC的+load</p>
+<p>3、main函数<br>调用AppDelegate的application:didFinishLaunchingWithOptions:方法<br>优化操作：<br>在不影响用户体验的前提下，尽可能将一些操作延迟，不要全部都放在finishLaunching方法中，按需加载</p>
+
       
 
       
@@ -171,10 +191,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/19/iOS性能调优/">展开全文 >></a>
-        </p>
       
 
       
@@ -223,8 +239,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="1、-load-和-initialize的区别是什么"><a href="#1、-load-和-initialize的区别是什么" class="headerlink" title="1、+load 和 +initialize的区别是什么"></a>1、+load 和 +initialize的区别是什么</h3><p>load 函数是当类或分类（Category）被加载到 Objective-C runtime 时（就是被引用的时候）被调用的，实现这个方法可以让我们在类加载的时候执行一些类相关的行为。当类被引用进项目的时候就会执行 load 函数（在 main 函数开始执行之前），与这个类是否被用到无关，每个类的 load 函数只会自动调用一次。load 函数调用特点如下：</p>
-        
+        <a id="more"></a>
+<h3 id="1、-load-和-initialize的区别是什么"><a href="#1、-load-和-initialize的区别是什么" class="headerlink" title="1、+load 和 +initialize的区别是什么"></a>1、+load 和 +initialize的区别是什么</h3><p>load 函数是当类或分类（Category）被加载到 Objective-C runtime 时（就是被引用的时候）被调用的，实现这个方法可以让我们在类加载的时候执行一些类相关的行为。当类被引用进项目的时候就会执行 load 函数（在 main 函数开始执行之前），与这个类是否被用到无关，每个类的 load 函数只会自动调用一次。load 函数调用特点如下：<br>1）当父类和子类都实现 load 函数时，二者的 load 方法都会被调用，父类的 load 方法执行顺序要优先于子类。<br>2）当子类未实现 load 方法时，在加载该子类时，不会去调用其父类 load 方法。<br>3）类中的 load 方法执行顺序要优先于类别（Category）。<br>4）当有多个类别（Category）都实现了 load 方法，这几个 load 方法都会执行，但执行顺序与编译顺序一致，即与类别在 Compile Sources 中出现的顺序一致。<br>5）当有多个不同的类的时候，每个类 load 执行顺序与编译顺序一致，即与其在 Compile Sources 出现的顺序一致。<br>initialize 函数是在类或者其子类的收到第一条消息之前调用。这里所指的消息包括实例方法和类方法的调用。也就是说 initialize 方法是以懒加载的方式被调用的，如果程序一直没有给某个类或它的子类发送消息，那么这个类的 initialize 方法是永远不会被调用的。<br>1）父类的 initialize 方法会比子类先执行。<br>2）当子类未实现 initialize 方法时，在该子类收到第一条消息之前，会调用父类 initialize 方法，子类实现 initialize 方法时，则会覆盖父类 initialize 方法。有点多态的意思。<br>3）当有多个 Category 都实现了 initialize 方法，会覆盖类中的方法，只执行最后那个被编译的，即 Compile Sources 列表中最后一个 Category 的 initialize 方法。<br>对于 load 和 initialize 方法，我们不要显示的调用 super 的对应方法。</p>
+<h3 id="2、Objective-c中，meta-class指的是什么"><a href="#2、Objective-c中，meta-class指的是什么" class="headerlink" title="2、Objective-c中，meta-class指的是什么"></a>2、Objective-c中，meta-class指的是什么</h3><p>元类 ( meta-class )。每个OC中的类有他自己关联的元类。<br>在运行时创建一个类只要三步：<br>1）为”class pair”（类对）分配空间（使用 objc_allocateClassPair ）<br>2）添加类中所需的方法和变量（这里使用 class_addMethod 添加了一个方法）<br>3）注册这个类使其能够被使用（使用 objc_registerClassPair ）<br>OC中的类也是一个对象。这意味着你能够发送消息给类。<br>有几种不同的方式来定义一个类，这依赖你正在运行的运行时的版本。但有一点不会变：他们都有一个 isa 字段开始，紧接着是一个 superclass 字段。<br>元类的定义： 元类是一个类对象的类。<br>当你向一个对象发送一条消息的时候，运行时会在对象的类的方法列表中查找这条消息是否存在。<br>当你向一个类发送一条消息的时候，运行时会在类的元类的方法列表中查找这条消息是否存在。<br>元类的存在是必需的，因为他存储了一个类的所有类方法。每个类的元类都是独一无二的，因为每个类都有一系列独特的类方法。<br>总结：<br>1）元类是一个类对象的类。每一个类有他自己独一无二的元类（因为每个类能够有自己独一无二的方法列表）。这就意味着类对象的类并不是和他们一样的类。<br>2）元类能确保类对象有所有底层类的实例和类方法，中间加上所有自己的类方法。所有类继承自NSObject，这意味着NSObject所有的实例和协议方法为所有类（和元类）对象都定义了。<br>3）所有元类使用基类的元类（NSObject 元类）来作为他们的类，包括只在运行时自定义的类的元类。</p>
+<h3 id="3、oc的class是如何实现的，selector是如何被转化为c语言的函数调用的"><a href="#3、oc的class是如何实现的，selector是如何被转化为c语言的函数调用的" class="headerlink" title="3、oc的class是如何实现的，selector是如何被转化为c语言的函数调用的"></a>3、oc的class是如何实现的，selector是如何被转化为c语言的函数调用的</h3><p>当一个类被正确的编译过后，在这个编译成功的类里面，存在一个变量用于保存这个类的信息。</p>
+<p>我们可以通过[NSClassFromString]或[obj class]。这样的机制允许我们在程序执行的过程中，可以Class来得到对象的类，也可以在程序执行的阶段动态的生成一个在编译阶段无法确定的<br>一个对象。(isa指针)</p>
+<ul>
+<li><p>@selector()基本可以等同C语言的中函数指针，只不过C语言中，可以把函数名直接赋给一个函数指针，而Object-C的类不能直接应用函数指针，这样只能做一个@selector语法来取。<br>@interface foo</p>
+<ul>
+<li><p>(int)add:int val<br>@end</p>
+<p>SEL class_func; // 定义一个类方法指针<br>class_func = @selector(add:int);</p>
+</li>
+</ul>
+<p>@selector是查找当前类的方法，而[object@selector(方法名:方法参数..)];<br>是取object对应类的相应方法。<br>查找类方法时，除了方法名，方法参数查询条件之一。</p>
+</li>
+</ul>
+<p>可以用字符串来找方法SEL 变量名 = NSSelectorFromString(方法名字的字符串)<br> 可以运行中用SEL变量反向查出方法名字字符串。NSString *变量名 = NSStringFromSelector(SEL参数)；</p>
+<p> 取到selector的值以后，执行seletor.SEL变量的执行。用performSelecor方法来执行。<br> [对象 performSelector:SEL变量 withObject:参数1 withObject:参数2];</p>
+<h3 id="4、strong-weak-unsafe-unretained的区别"><a href="#4、strong-weak-unsafe-unretained的区别" class="headerlink" title="4、strong/weak/unsafe_unretained的区别"></a>4、strong/weak/unsafe_unretained的区别</h3><p>1）weak只能修饰OC对象,使用weak不会使计数器加1,对象销毁时修饰的对象会指向nil<br>2）strong等价与retain,能使计数器加1,且不能用来修饰数据类型<br>3）unsafe_unretained等价与assign,可以用来修饰数据类型和OC对象,但是不会使计数器加1,且对象销毁时也不会将对象指向nil,容易造成野指针错误</p>
+<h3 id="5、CALayer和UIView的区别和联系"><a href="#5、CALayer和UIView的区别和联系" class="headerlink" title="5、CALayer和UIView的区别和联系"></a>5、CALayer和UIView的区别和联系</h3><p>1）每个 UIView 内部都有一个 CALayer 在背后提供内容的绘制和显示，并且 UIView 的尺寸样式都由内部的 Layer 所提供。两者都有树状层级结构，layer 内部有 SubLayers，View 内部有 SubViews.但是 Layer 比 View 多了个AnchorPoint<br>2）在 View显示的时候，UIView 做为 Layer 的 CALayerDelegate,View 的显示内容由内部的 CALayer 的 display<br>3）CALayer 是默认修改属性支持隐式动画的，在给 UIView 的 Layer 做动画的时候，View 作为 Layer 的代理，Layer 通过 actionForLayer:forKey:向 View请求相应的 action(动画行为<br>4）layer 内部维护着三分 layer tree,分别是 presentLayer Tree(动画树),modeLayer Tree(模型树), Render Tree (渲染树),在做 iOS动画的时候，我们修改动画的属性，在动画的其实是 Layer 的 presentLayer的属性值,而最终展示在界面上的其实是提供 View的modelLayer<br>5）两者最明显的区别是 View可以接受并处理事件，而 Layer 不可以</p>
+<h3 id="6、uiscrollview大概是如何实现的，它是如何捕捉、响应手势的"><a href="#6、uiscrollview大概是如何实现的，它是如何捕捉、响应手势的" class="headerlink" title="6、uiscrollview大概是如何实现的，它是如何捕捉、响应手势的"></a>6、uiscrollview大概是如何实现的，它是如何捕捉、响应手势的</h3><p>UIScrollView在滚动过程当中，其实是在修改原点坐标。当手指触摸后, scroll view会暂时拦截触摸事件,使用一个计时器。假如在计时器到点后没有发生手指移动事件，那么 scroll view 发送 tracking events 到被点击的 subview。假如在计时器到点前发生了移动事件，那么 scroll view 取消 tracking 自己发生滚动。</p>
+<h3 id="7、为什么UIScrollVIew的滚动会导致NSTimer失效？"><a href="#7、为什么UIScrollVIew的滚动会导致NSTimer失效？" class="headerlink" title="7、为什么UIScrollVIew的滚动会导致NSTimer失效？"></a>7、为什么UIScrollVIew的滚动会导致NSTimer失效？</h3><p>定时器里面有个runoop mode,一般定时器是运行在defaultmode上。但是如果滑动了这个页面,主线程runloop会转到UITrackingRunLoopMode中,这时候就不能处理定时器了,造成定时器失效,原因就是runroop mode选错了,解决办法有2个：<br>一个是更改mode为NSRunLoopCommonModes(无论runloop运行在哪个mode,都能运行),<br>还有种办法是切换到主线程来更新UI界面的刷新</p>
+<h3 id="8、浅拷贝和深拷贝"><a href="#8、浅拷贝和深拷贝" class="headerlink" title="8、浅拷贝和深拷贝"></a>8、浅拷贝和深拷贝</h3><p>copy 浅拷贝，不拷贝对象本身，仅仅是拷贝指向对象的指针。<br>mutableCopy 深拷贝，是直接拷贝整个对象内存到另一块内存中。</p>
+<p>问题1，浅拷贝的情况下，改变str1的值，str2的值会变化吗？<br>答案是改变str1的值，str2的值不会变化<br>copy有它的特点：<br>1）修改源对象的属性和行为，不会影响副本对象<br>2）修改副本对象的属性和行为，不会影响源对象<br>因为str2 = str1的时候，两个字符串都是不可变的，指向的同一块内存空间中的 @”str1”,是不可能变成@”abcd”的。所以这个时候，为了优化性能，系统没必要另外提供内存，只生成另外一个指针，指向同一块内存空间就行。<br>但是当你从新给 str1 或者str2赋值的时候，因为之前的内容不可变，还有互不影响的原则下，这个时候，系统会从新开辟一块内存空间。<br>问题2<br>copy 一个可变的数组，会出现什么结果?  答案是内存地址不一样<br>问题3<br>1）不可变类型(不管是集合还是非集合),copy结果，不产生新对象，浅拷贝；<br>不可变类型(不管是集合还是非集合),mutableCopy结果，产生新对象，深拷贝.<br>2）可变类型(不管是集合还是非集合),copy结果，产生新对象，深拷贝；<br>可变类型(不管是集合还是非集合),mutableCopy结果，产生新对象，深拷贝.<br>3）对不可变类型（NString、NSArray、NSSet），要用copy修饰；<br>4）可变类型（NSMutableString、NSMutableArray、NSMutableSet）,要用strong修饰;<br>5）用copy还是strong修饰一个属性时，与深拷贝浅拷贝不要混为一谈了，是两码事。</p>
+<h3 id="9、给定一个字符串，里边可能包含“-”、”-”、“-”三种括号，请编写程序检查该字符串的括号是否成对出现。"><a href="#9、给定一个字符串，里边可能包含“-”、”-”、“-”三种括号，请编写程序检查该字符串的括号是否成对出现。" class="headerlink" title="9、给定一个字符串，里边可能包含“()”、”{}”、“[]”三种括号，请编写程序检查该字符串的括号是否成对出现。"></a>9、给定一个字符串，里边可能包含“()”、”{}”、“[]”三种括号，请编写程序检查该字符串的括号是否成对出现。</h3><p>用一个栈的特性，就能解决该问题，左括号栈顶字符必须和第一个入栈的右括号字符匹配。<br>栈介绍：栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。<br>栈的特性：后进先出（LIFO)</p>
+
       
 
       
@@ -234,10 +273,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/09/19/iOS零碎知识点/">展开全文 >></a>
-        </p>
       
 
       
@@ -286,8 +321,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>权限名称    Key值<br>通讯录    NSContactsUsageDescription<br>麦克风    NSMicrophoneUsageDescription<br>相册    NSPhotoLibraryUsageDescription<br>相机    NSCameraUsageDescription</p>
-        
+        <a id="more"></a>
+<p>权限名称    Key值<br>通讯录    NSContactsUsageDescription<br>麦克风    NSMicrophoneUsageDescription<br>相册    NSPhotoLibraryUsageDescription<br>相机    NSCameraUsageDescription<br>添加图片到相册    NSPhotoLibraryAddUsageDescription<br>持续获取地理位置    NSLocationAlwaysUsageDescription<br>使用时获取地理位置    NSLocationWhenInUseUsageDescription<br>蓝牙    NSBluetoothPeripheralUsageDescription<br>语音转文字    NSSpeechRecognitionUsageDescription<br>日历    NSCalendarsUsageDescription</p>
+<p>转载自链接：<a href="http://ask.dcloud.net.cn/article/931" target="_blank" rel="noopener">http://ask.dcloud.net.cn/article/931</a></p>
+
       
 
       
@@ -297,10 +334,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/15/在info.plist隐私权限的配置/">展开全文 >></a>
-        </p>
       
 
       
@@ -349,9 +382,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>香港财经,rtmp://202.69.69.180:443/webcast/bshdlive-pc</p>
+        <a id="more"></a>
+<p>香港财经,rtmp://202.69.69.180:443/webcast/bshdlive-pc</p>
 <p>韩国GoodTV,rtmp://mobliestream.c3tv.com:554/live/goodtv.sdp</p>
-        
+<p>韩国朝鲜日报,rtmp://live.chosun.gscdn.com/live/tvchosun1.stream</p>
+<p>美国1,rtmp://ns8.indexforce.com/home/mystream</p>
+<p>美国2,rtmp://media3.scctv.net/live/scctv_800</p>
+<p>美国中文电视,rtmp://media3.sinovision.net:1935/live/livestream</p>
+<p>湖南卫视,rtmp://58.200.131.2:1935/livetv/hunantv</p>
+<p>转载自链接：<a href="https://blog.csdn.net/q386815991/article/details/80942155" target="_blank" rel="noopener">https://blog.csdn.net/q386815991/article/details/80942155</a></p>
+
       
 
       
@@ -361,10 +401,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/15/可用RTMP直播源/">展开全文 >></a>
-        </p>
       
 
       
@@ -413,8 +449,53 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="一、下载ijkplayer"><a href="#一、下载ijkplayer" class="headerlink" title="一、下载ijkplayer"></a>一、下载ijkplayer</h3><p><a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="noopener">https://github.com/Bilibili/ijkplayer</a></p>
-        
+        <a id="more"></a>
+
+<h3 id="一、下载ijkplayer"><a href="#一、下载ijkplayer" class="headerlink" title="一、下载ijkplayer"></a>一、下载ijkplayer</h3><p><a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="noopener">https://github.com/Bilibili/ijkplayer</a></p>
+<h3 id="二、编译ijkplayer"><a href="#二、编译ijkplayer" class="headerlink" title="二、编译ijkplayer"></a>二、编译ijkplayer</h3><p>1、打开终端, cd 到jkplayer-master文件夹中, 也就是下载完解压后的文件夹。<br>2、终端执行命令行./init-ios.sh, 这一步是去下载 FFMpeg 的, 时间稍微会久一点。<br>3、在第2步中下载完成后, 终端执行cd ios, 也就是说进入到 ios目录下。<br>4、进入 ios 文件夹后, 在终端依次执行./compile-ffmpeg.sh clean和./compile-ffmpeg.sh all命令, 编译 FFMpeg, 也就是README.md中这两步.编译时间也较久。</p>
+<h3 id="三、打包IJKMediaFramework-framework框架"><a href="#三、打包IJKMediaFramework-framework框架" class="headerlink" title="三、打包IJKMediaFramework.framework框架"></a>三、打包IJKMediaFramework.framework框架</h3><p>1、打开工程IJKMediaPlayer.xcodeproj。<br>2、工程打开后设置工程的 scheme。<br>3、设置好 scheme 后, 分别选择真机和模拟器进行编译,<br>编译又分为http编译和https编译<br>http编译对应ffmpeg<br>https编译对应openssl</p>
+<p>编译openssl, 如果不需要https可以跳过这一步<br>./compile-openssl.sh all<br>编译ffmpeg<br>./compile-ffmpeg.sh all</p>
+<p>1) Cmd + b 直接运行，会报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">./libavutil/arm/asm.S:50:9: error: unknown directive</span><br><span class="line">        .arch armv7-a</span><br><span class="line">        ^</span><br><span class="line">make: *** [libavcodec/arm/aacpsdsp_neon.o] Error 1</span><br></pre></td></tr></table></figure>
+
+<p>最新的 Xcode 已经弱化了对 32 位的支持, 解决方法:<br>在 compile-ffmpeg.sh中删除 armv7, 修改如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FF_ALL_ARCHS_IOS8_SDK=&quot;arm64 i386 x86_64&quot;</span><br></pre></td></tr></table></figure>
+
+<p>再重新执行出现错误的命令: ./compile-ffmpeg.sh all</p>
+<p>2) Cmd + b 直接运行，会报错 avconfig.h 文件找不到，这时候去一下路径找到 avconfig.h 文件，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Desktop/ijkplayer-ios/ios/build/universal/include/libavutil</span><br></pre></td></tr></table></figure>
+
+<p>打开 avconfig.h ，注释掉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &quot;armv7/avconfig.h&quot;</span><br></pre></td></tr></table></figure>
+
+<p>3）Cmd + b 再运行，又报错 config.h 文件找不到，去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">~/Desktop/ijkplayer-ios/ios/build/universal/include/libffmpeg</span><br></pre></td></tr></table></figure>
+
+<p>中打开 config.h , 同上注释掉</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">include &quot;armv7/avconfig.h&quot;</span><br></pre></td></tr></table></figure>
+
+<p>4）Cmd + b 再运行，还报错</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">... ld: symbol(s) not found for architecture armv7,</span><br></pre></td></tr></table></figure>
+
+<p>也就是 armv7 不支持，去</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TARGETS ——&gt; IJKMediaFrameworkWithSSL ——&gt; Build Settings ——&gt; Valid Architecutres</span><br></pre></td></tr></table></figure>
+
+<p>中，删掉其中的 armv7、armv7s</p>
+<p>编译完成后进入 Finder。<br>4、进入 Finder 后, 可以看到有真机和模拟器两个版本的编译结果。<br>5、合并真机和模拟器版本的 framework。<br>6、使用终端进行合并,打开终端, 先 cd到 Products目录下, 然后执行: lipo -create 真机framework路径 模拟器framework路径 -output 合并的文件路径</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lipo -create Release-iphoneos/IJKMediaFramework.framework/IJKMediaFramework Release-iphonesimulator/IJKMediaFramework.framework/IJKMediaFramework -output IJKMediaFramework</span><br></pre></td></tr></table></figure>
+
+<p>合并完成可以看到这里生成了一个大概两倍大小的文件, 将生成的 IJKMediaFramework文件替换掉 真机framework中的 IJKMediaFramework文件，然后这个替换掉文件的 真机framework就是我们需要的 通用的framework了。</p>
+<p>7、IJKMediaFramework.framework文件就是我们需要的框架了, 可以复制粘贴出来, 后期我们需要导入工程使用。</p>
+<h3 id="四、iOS工程中集成IJKPlayer"><a href="#四、iOS工程中集成IJKPlayer" class="headerlink" title="四、iOS工程中集成IJKPlayer"></a>四、iOS工程中集成IJKPlayer</h3><p>新建工程, 导入合并后的IJKMediaFramework.framework</p>
+<p>导入的依赖库:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">AudioToolbox.framework</span><br><span class="line">AVFoundation.framework</span><br><span class="line">CoreGraphics.framework</span><br><span class="line">CoreMedia.framework</span><br><span class="line">CoreVideo.framework</span><br><span class="line">libbz2.tbd</span><br><span class="line">libz.tbd</span><br><span class="line">MediaPlayer.framework</span><br><span class="line">MobileCoreServices.framework</span><br><span class="line">OpenGLES.framework</span><br><span class="line">QuartzCore.framework</span><br><span class="line">UIKit.framework</span><br><span class="line">VideoToolbox.framework</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、使用-IJKMediaFramework第三方库"><a href="#五、使用-IJKMediaFramework第三方库" class="headerlink" title="五、使用 IJKMediaFramework第三方库"></a>五、使用 IJKMediaFramework第三方库</h3><p>这里在ViewController.m文件中使用IJKMediaFramework框架进行测试使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">#import &lt;IJKMediaFramework/IJKMediaFramework.h&gt;</span><br><span class="line"></span><br><span class="line">// 直播视频</span><br><span class="line">self.url = [NSURL URLWithString:@&quot;http://live.hkstv.hk.lxdns.com/live/hks/playlist.m3u8&quot;];</span><br><span class="line">// self.url = [NSURL URLWithString:@&quot;https://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4&quot;];</span><br><span class="line"></span><br><span class="line">_player = [[IJKFFMoviePlayerController alloc] initWithContentURL:self.url withOptions:nil];</span><br><span class="line">UIView *playerView = [self.player view];</span><br><span class="line">UIView *displayView = [[UIView alloc] initWithFrame:self.view.bounds];</span><br><span class="line">self.playerView = displayView;</span><br><span class="line">self.playerView.backgroundColor = [UIColor blackColor];</span><br><span class="line">[self.view addSubview:self.playerView];</span><br><span class="line"></span><br><span class="line">playerView.frame = self.playerView.bounds;</span><br><span class="line">playerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;</span><br><span class="line">[self.playerView insertSubview:playerView atIndex:1];</span><br><span class="line">[_player setScalingMode:IJKMPMovieScalingModeAspectFill];</span><br><span class="line">[self installMovieNotificationObservers];</span><br></pre></td></tr></table></figure>
+
+<br>
+转载自链接：https://www.jianshu.com/p/59aff611dacd
+
       
 
       
@@ -424,10 +505,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/15/生成IJKMediaFramework第三方库/">展开全文 >></a>
-        </p>
       
 
       
@@ -476,8 +553,20 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="Bitcode-是什么，有什么作用"><a href="#Bitcode-是什么，有什么作用" class="headerlink" title="Bitcode 是什么，有什么作用"></a>Bitcode 是什么，有什么作用</h3><p>Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&gt; ”Enable Bitcode” 中看到这个设置项。 </p>
-        
+        <a id="more"></a>
+<h3 id="Bitcode-是什么，有什么作用"><a href="#Bitcode-是什么，有什么作用" class="headerlink" title="Bitcode 是什么，有什么作用"></a>Bitcode 是什么，有什么作用</h3><p>Xcode 7 之后，在我们新建一个 iOS 项目时，Bitcode 选项默认是设置为 YES 的。我们可以在 ”Build Settings” -&gt; ”Enable Bitcode” 中看到这个设置项。<br>Apple 目前采用的编译器工具链是 LLVM，我们在编辑器中通过 C/C++/Objective-c/Swift 等语言编写的程序，通过 LLVM 编译器编译为各个芯片平台上的汇编指令，或可执行机器指令数据。而 Bitcode 则是位于编译前后之间的一种中间码。 </p>
+<p>LLVM 的编译工作原理是先把项目程序源代码翻译为 Bitcode 中间码；再根据不同目标机器芯片平台，转换为相应的汇编指令及机器码。这样的设计就让 LLVM 成为了一个编译器架构，可以轻而易举的在 LLVM 架构之上发明新的语言，以及在 LLVM 架构下支持新的 CPU 指令输出。虽然 Bitcode 仅仅只是一个中间码，不能在任何平台上运行，但它可以转化为任何被支持的 CPU 指令，包括还没被发明的 CPU。 </p>
+<p>也就是说现在打开 Bitcode 功能，提交一个 App 到 App Store。如果后面 Apple 推出了一款 CPU 全新设计的手机，在苹果后台服务器一样可以通过这个 App 的 Bitcode 编译转化为适用于新 CPU 的可执行程序，以供新手机用户下载运行这个 App。 </p>
+<p>@Onevcat 在 开发者所需要知道的 iOS 9 SDK 新特性，对 Bitcode 有这样的介绍。 </p>
+<p>给 App 瘦身的另一个手段是提交 Bitcode 给 Apple，而不是最终的二进制。Bitcode 是 LLVM 的中间码，在编译器更新时，Apple 可以用你之前提交的 Bitcode 进行优化，这样你就不必在编译器更新后再次提交你的 app，也能享受到编译器改进所带来的好处。Bitcode 支持在新项目中是默认开启的，没有特别理由的话，你也不需要将它特意关掉。</p>
+<h3 id="Bitcode-支持哪些平台"><a href="#Bitcode-支持哪些平台" class="headerlink" title="Bitcode 支持哪些平台"></a>Bitcode 支持哪些平台</h3><p>列出 iOS、WatchOS、TVOS 及 macOS 对 Bitcode 的支持情况：</p>
+<p>对于 iOS 平台，Bitcode 是可选的；<br>对于 WatchOS 及 TVOS，Bitcode 是必须开启的；<br>对于 macOS，是不支持 Bitcode 的.</p>
+<h3 id="Bitcode-的优缺点"><a href="#Bitcode-的优缺点" class="headerlink" title="Bitcode 的优缺点"></a>Bitcode 的优缺点</h3><p>优点</p>
+<p>Bitcode 上传到 Apple 服务器后，Apple 为安装 App 的目标设备进行二进制优化，减少安装包的下载大小;<br>Apple 以后如果设计了采用新指令集的新 CPU，可以继续使用同一份 Bitcode 编译出新 CPU 上执行的可执行文件，供新设备用户下载安装；<br>缺点</p>
+<p>使用了 Bitcode 之后，用户安装的二进制不是开发者这边生成的，而是 Apple 服务器经过优化生成的二进制，对于开发者来说，丢失了对应的调试符号信息</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>由阿里百川用户反馈模块集成遇到的一个 Bitcode 问题。单纯对于用户反馈这项功能来说，很好奇的一点是，通过手动引入 Framework 没有遇到 Bitcode 不支持的问题；而通过 Cocoapods 引入，遇到了前面提到的 Bitcode 问题。考虑到项目的后期维护性，最终选用的解决方案是，通过 Cocoapods 引入库，同时关闭 Bitcode 的支持。</p>
+<p>转载自链接：<a href="https://github.com/JonyFang/dev-notes" target="_blank" rel="noopener">https://github.com/JonyFang/dev-notes</a></p>
+
       
 
       
@@ -487,10 +576,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/12/iOS 开发中的 Bitcode/">展开全文 >></a>
-        </p>
       
 
       
@@ -539,8 +624,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>本文主要使用的三个技术：<br>推流：LFLiveKit<br>播放：ijkplayer<br>服务器:nginx+rtmp+ffmpeg</p>
-        
+        <a id="more"></a>
+<p>本文主要使用的三个技术：<br>推流：LFLiveKit<br>播放：ijkplayer<br>服务器:nginx+rtmp+ffmpeg</p>
+<h3 id="一、推流"><a href="#一、推流" class="headerlink" title="一、推流"></a>一、推流</h3><p>LFLiveKit：框架支持RTMP，由Adobe公司开发。github地址<a href="https://github.com/LaiFengiOS/LFLiveKit" target="_blank" rel="noopener">https://github.com/LaiFengiOS/LFLiveKit</a><br>LFLiveKit库里已经集成GPUImage框架用于美颜功能，GPUImage基于OpenGl开发，纯OC语言框架，封装好了各种滤镜同时也可以编写自定义的滤镜，其本身内置了多达125种常见的滤镜效果。</p>
+<h3 id="二、播放"><a href="#二、播放" class="headerlink" title="二、播放"></a>二、播放</h3><p>ijkplayer：是基于FFmpeg的跨平台播放器框架，由B站开发。目前已被多个主流直播App集成使用。github地址：<a href="https://github.com/Bilibili/ijkplayer" target="_blank" rel="noopener">https://github.com/Bilibili/ijkplayer</a></p>
+<h3 id="三、服务器搭建"><a href="#三、服务器搭建" class="headerlink" title="三、服务器搭建"></a>三、服务器搭建</h3><p>nginx+rtmp+ffmpeg：在本地搭建服务器，免去开通第三方直播的流量费用。<br>现在我们的项目中集成了推流的所用的LFLiveKit，播放所需的ijkplayer，便可用手机做推流直播，模拟器做拉流播放。</p>
+<h3 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h3><p>一个完整的直播系统需要涉及到的技术主要包括以下方面：<br>1.采集、2.滤镜处理、3.编码、4.推流、5.CDN分发、6.拉流、7.解码、8.播放、9.聊天互动。<br>其中1～4由LFLiveKit完成（2由GPUImage完成），5就是搭建的本地服务器，6～8由ijkplayer完成。</p>
+<p>转载自链接：<a href="https://www.jianshu.com/p/30595a5bff42" target="_blank" rel="noopener">https://www.jianshu.com/p/30595a5bff42</a></p>
+
       
 
       
@@ -550,10 +641,6 @@
       
       
 
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2019/08/11/搭建iOS端视频直播系统/">展开全文 >></a>
-        </p>
       
 
       
