@@ -6,18 +6,18 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>git命令行操作 | </title>
+  <title>四种软件开发模式 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content=".">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git命令行操作">
-<meta property="og:url" content="http://yoursite.com/2019/12/15/git命令行操作/index.html">
+<meta property="og:title" content="四种软件开发模式">
+<meta property="og:url" content="http://yoursite.com/2019/12/15/四种软件开发模式/index.html">
 <meta property="og:site_name">
 <meta property="og:description" content=".">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-15T09:05:17.156Z">
+<meta property="og:updated_time" content="2019-12-15T09:08:34.501Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git命令行操作">
+<meta name="twitter:title" content="四种软件开发模式">
 <meta name="twitter:description" content=".">
   
     <link rel="alternative" href="/atom.xml" title type="application/atom+xml">
@@ -128,20 +128,20 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-git命令行操作" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-四种软件开发模式" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      git命令行操作
+      四种软件开发模式
     </h1>
   
 
         
-        <a href="/2019/12/15/git命令行操作/" class="archive-article-date">
-  	<time datetime="2019-12-15T08:51:38.368Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-15</time>
+        <a href="/2019/12/15/四种软件开发模式/" class="archive-article-date">
+  	<time datetime="2019-12-15T09:05:25.570Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-12-15</time>
 </a>
         
       </header>
@@ -150,13 +150,10 @@
       
         <p>.</p>
 <a id="more"></a>
-<h3 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h3><p>git status 查看修改状态<br>git pull origin master 拉取远程仓库master分支合并到本地，master根据场景换成其它分支名<br>git add file 添加文件到暂存区，可用 * 添加所有<br>git commit -m “commit message” 提交到本地版本库，并添加注释，注释表明此次修改内容，要清晰准确<br>git push origin master 将本地版本提交到远程仓库的master分支，master根据场景换成其它分支名 对大部分日常工作来说， 上面几个命令基本就够用了。</p>
-<h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>从本地到远程 项目开发的时候，有时候是先在本地建一个项目，再提交到远程仓库的。<br>创建项目目录（或通过IDE创建），命令行cd到项目目录<br>执行git init ， 将在项目目录创建.git目录<br>执行git add * ，将所有文件添加到暂存区，这里要先创建一个.gitignore文件，将不需要版本维护的文件添加进去忽略，不然各种IDE编译文件夹，环境相关文件都加到版本库去了。删除文件用git rm file_name<br>执行git commit -m “upload project” ，提交到本地仓库<br>在gitlab或github上创建一个仓库，并将仓库地址复制下来<br>执行git remote add origin git@server-name:path/repo-name.git ，关联远程仓库，仓库地址如果是http开头则要用户名密码，如果是git开头，则是走的ssh协议，需要将你本机的ssh公钥添加到远程仓库服务上。<br>执行git push -u origin master ，推送本地仓库内容到远程仓库 这样在远程仓库目录，就能看到你提交上去的文件内容了。<br>从远程到本地 更多的时候，是远程仓库已有项目了，需要下载到本地开发。<br>git clone git@server-name:path/repo-name.git ， 将远程仓库的内容下载到本地，这里仓库地址的处理同上<br>如：<br>git clone <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a>:silence260/learnenglish.git</p>
-<h3 id="修改内容"><a href="#修改内容" class="headerlink" title="修改内容"></a>修改内容</h3><p>git add * ，将修改的内容添加到暂存区<br>git commit -m “fix xxx issue” ，提交到本地仓库<br>git push -u origin master ， 推送本地仓库内容至远程仓库<br>分支管理 平时开发时需要创建子分支来实现你的功能模块，然后再合并到主分支中。<br>git checkout -b your_branch_name ， 创建并切换分支<br>git branch ， 查看分支，标有*号表示当前所在分支<br>git merge dev ， 合并指定dev分支到当前分支<br>git merge –no-ff -m “merge with no-ff” dev ， 合并分支并生成commit记录<br>git branch -d dev ， 删除分支 git checkout -b dev = git branch dev + git checkout dev Fast-forward合并，“快进模式”，也就是直接把master指向dev的当前提交，所以合并速度非常快。存在冲突的不能fast forward。git merge –no-ff -m “merge with no-ff” dev Fast forward模式下，删除分支后，会丢掉分支信息。如果强制禁用Fast forward模式，Git就会在merge时生成一个新的commit，这样，从分支历史上就可以看出分支信息</p>
-<p>一、瀑布开发<br>瀑布模型是由W.W.Royce在1970年最初提出的软件开发模型，瀑布式开发是一种老旧的计算机软件开发方法。瀑布模型式是最典型的预见性的方法，严格遵循预先计划的需求分析、设计、编码、集成、测试、维护的步骤顺序进行。步骤成果作为衡量进度的方法，例如需求规格，设计文档，测试计划和代码审阅等等。<br>瀑布式的主要的问题是它的严格分级导致的自由度降低，项目早期即作出承诺导致对后期需求的变化难以调整，代价高昂。瀑布式方法在需求不明并且在项目进行过程中可能变化的情况下基本是不可行的。</p>
-<p>二、迭代式开发<br>迭代式开发也被称作迭代增量式开发或迭代进化式开发，是一种与传统的瀑布式开发相反的软件开发过程，它弥补了传统开发方式中的一些弱点，具有更高的成功率和生产率。<br>1、每次只设计和实现这个产品的一部分<br>2、逐步逐步完成的方法叫迭代开发<br>3、每次设计和实现一个阶段叫做一个迭代<br>在迭代式开发方法中，整个开发工作被组织为一系列的短小的、固定长度（如3周）的小项目，被称为一系列的迭代。每一次迭代都包括了需求分析、设计、实现与测试。采用这种方法，开发工作可以在需求被完整地确定之前启动，并在一次迭代中完成系统的一部分功能或业务逻辑的开发工作。再通过客户的反馈来细化需求，并开始新一轮的迭代。<br>迭代式开发的优点：<br>1、降低风险<br>2、得到早期用户反馈<br>3、持续的测试和集成<br>4、使用变更<br>5、提高复用性</p>
-<p>三、螺旋开发<br>1988年，巴利·玻姆(Barry Boehm)正式发表了软件系统开发的“螺旋模型”，它将瀑布模型和快速原型模型结合起来，强调了其他模型所忽视的风险分析，特别适合于大型复杂的系统。“螺旋模型”刚开始规模很小，当项目被定义得更好、更稳定时，逐渐展开。<br>“螺旋模型”的核心就在于您不需要在刚开始的时候就把所有事情都定义的清清楚楚。您轻松上阵，定义最重要的功能，实现它，然后听取客户的意见，之后再进入到下一个阶段。如此不断轮回重复，直到得到您满意的最终产品。 </p>
-<p>四、敏捷开发<br>敏捷软件开发又称敏捷开发，是一种从1990年代开始逐渐引起广泛关注的一些新型软件开发方法，是一种应对快速变化的需求的一种软件开发能力。它们的具体名称、理念、过程、术语都不 尽相同，相对于“非敏捷”，更强调程序员团队与业务专家之间的紧密协作、面对面的沟通（认为比书面的文档更有效）、频繁交付新的软件版本、紧凑而自我组织 型的团队、能够很好地适应需求变化的代码编写和团队组织方法，也更注重软件开发中人的作用。</p>
+<h3 id="一、瀑布开发"><a href="#一、瀑布开发" class="headerlink" title="一、瀑布开发"></a>一、瀑布开发</h3><p>瀑布模型是由W.W.Royce在1970年最初提出的软件开发模型，瀑布式开发是一种老旧的计算机软件开发方法。瀑布模型式是最典型的预见性的方法，严格遵循预先计划的需求分析、设计、编码、集成、测试、维护的步骤顺序进行。步骤成果作为衡量进度的方法，例如需求规格，设计文档，测试计划和代码审阅等等。<br>瀑布式的主要的问题是它的严格分级导致的自由度降低，项目早期即作出承诺导致对后期需求的变化难以调整，代价高昂。瀑布式方法在需求不明并且在项目进行过程中可能变化的情况下基本是不可行的。</p>
+<h3 id="二、迭代式开发"><a href="#二、迭代式开发" class="headerlink" title="二、迭代式开发"></a>二、迭代式开发</h3><p>迭代式开发也被称作迭代增量式开发或迭代进化式开发，是一种与传统的瀑布式开发相反的软件开发过程，它弥补了传统开发方式中的一些弱点，具有更高的成功率和生产率。每次只设计和实现这个产品的一部分，逐步逐步完成的方法叫迭代开发，每次设计和实现一个阶段叫做一个迭代。<br>在迭代式开发方法中，整个开发工作被组织为一系列的短小的、固定长度（如3周）的小项目，被称为一系列的迭代。每一次迭代都包括了需求分析、设计、实现与测试。采用这种方法，开发工作可以在需求被完整地确定之前启动，并在一次迭代中完成系统的一部分功能或业务逻辑的开发工作。再通过客户的反馈来细化需求，并开始新一轮的迭代。<br>迭代式开发的优点：<br>1、降低风险<br>2、得到早期用户反馈<br>3、持续的测试和集成<br>4、使用变更<br>5、提高复用性</p>
+<h3 id="三、螺旋开发"><a href="#三、螺旋开发" class="headerlink" title="三、螺旋开发"></a>三、螺旋开发</h3><p>1988年，巴利·玻姆(Barry Boehm)正式发表了软件系统开发的“螺旋模型”，它将瀑布模型和快速原型模型结合起来，强调了其他模型所忽视的风险分析，特别适合于大型复杂的系统。“螺旋模型”刚开始规模很小，当项目被定义得更好、更稳定时，逐渐展开。<br>“螺旋模型”的核心就在于您不需要在刚开始的时候就把所有事情都定义的清清楚楚。您轻松上阵，定义最重要的功能，实现它，然后听取客户的意见，之后再进入到下一个阶段。如此不断轮回重复，直到得到您满意的最终产品。 </p>
+<h3 id="四、敏捷开发"><a href="#四、敏捷开发" class="headerlink" title="四、敏捷开发"></a>四、敏捷开发</h3><p>敏捷软件开发又称敏捷开发，是一种从1990年代开始逐渐引起广泛关注的一些新型软件开发方法，是一种应对快速变化的需求的一种软件开发能力。它们的具体名称、理念、过程、术语都不 尽相同，相对于“非敏捷”，更强调程序员团队与业务专家之间的紧密协作、面对面的沟通（认为比书面的文档更有效）、频繁交付新的软件版本、紧凑而自我组织 型的团队、能够很好地适应需求变化的代码编写和团队组织方法，也更注重软件开发中人的作用。</p>
 
       
 
@@ -241,7 +238,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/15/git命令行操作/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2019/12/15/四种软件开发模式/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -255,19 +252,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2019/12/15/四种软件开发模式/" id="article-nav-newer" class="article-nav-link-wrap">
-
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          四种软件开发模式
-        
-      </div>
-    </a>
   
-  
-    <a href="/2019/09/19/iOS性能调优/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">iOS性能调优
+    <a href="/2019/12/15/git命令行操作/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">git命令行操作
       </div>
       <i class="icon-circle-right"></i>
     </a>
@@ -295,7 +282,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本命令"><span class="toc-number">1.</span> <span class="toc-text">基本命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#新建项目"><span class="toc-number">2.</span> <span class="toc-text">新建项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改内容"><span class="toc-number">3.</span> <span class="toc-text">修改内容</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、瀑布开发"><span class="toc-number">1.</span> <span class="toc-text">一、瀑布开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、迭代式开发"><span class="toc-number">2.</span> <span class="toc-text">二、迭代式开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三、螺旋开发"><span class="toc-number">3.</span> <span class="toc-text">三、螺旋开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#四、敏捷开发"><span class="toc-number">4.</span> <span class="toc-text">四、敏捷开发</span></a></li></ol>
                     </div>
                 </span>
             </div>
